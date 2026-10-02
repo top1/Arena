@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#102722" />
+  <title>Moss & Metal — A little adventure, a lot of heart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Moss and Metal home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" role="img"><path d="M20 34V18"/><path d="M20 25C8 25 6 16 7 9c8 0 15 3 15 12"/><path d="M20 20c0-9 6-14 14-15 1 9-2 17-13 18"/><circle cx="20" cy="34" r="2"/></svg>
+        </span>
+        <span class="brand-wordmark"><strong>MOSS <i>&</i> METAL</strong><small>A little adventure, a lot of heart</small></span>
+      </a>
+      <div class="topbar-divider"></div>
+      <div class="topbar-caption"><span class="live-dot"></span> A solar-punk storybook RPG</div>
+      <div class="topbar-actions">
+        <div class="resource-pill" title="Brass cogs"><span class="resource-icon cog-icon">✿</span><span id="cogCount">88</span></div>
+        <div class="resource-pill pollen-pill" title="Field pollen"><span class="resource-icon">✦</span><span id="pollenCount">12</span></div>
+        <button class="icon-button sound-button" id="soundButton" aria-label="Toggle sound" title="Toggle sound">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11"/></svg>
+        </button>
+        <button class="top-action" id="openPack"><span class="top-action-icon">▧</span><span>Satchel</span><span class="satchel-count" id="satchelCount">6</span></button>
+        <button class="top-action home-action" id="openWorkshop"><span class="top-action-icon">⌂</span><span>Home</span></button>
+      </div>
+    </header>
+
+    <section class="hero-row" aria-label="Current expedition">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="day-sun" id="dayGlyph">☼</span><span id="dayLabel">DAY 04</span><span class="eyebrow-separator">/</span><span class="season-label">EARLY SPRING</span></div>
+        <h1 id="regionHeading">Mosslight Wilds</h1>
+        <p id="regionDescription">The old forest is humming again. Follow the amber glow.</p>
+      </div>
+      <div class="day-clock-card">
+        <div class="clock-topline">
+          <div class="clock-face" aria-hidden="true"><span id="clockIcon">☀</span></div>
+          <div><span class="clock-label" id="clockPhase">A BEAUTIFUL DAY</span><strong id="clockTime">10:24 <small>AM</small></strong></div>
+          <div class="clock-weather" id="weatherGlyph" title="Soft spring breeze">☁</div>
+        </div>
+        <div class="day-progress-track"><span id="dayProgress"></span><i class="day-progress-sun">✦</i></div>
+        <div class="clock-foot"><span>DAWN <b>6:00</b></span><span id="clockHint">Plenty of daylight left</span><span>DUSK <b>8:00</b></span></div>
+      </div>
+    </section>
+
+    <section class="game-grid">
+      <aside class="left-column" aria-label="World and journal">
+        <section class="panel region-panel">
+          <div class="panel-heading">
+            <div><div class="panel-kicker">THE WIDE WORLD</div><h2>Choose a trail</h2></div>
+            <span class="map-stamp" aria-hidden="true">✧</span>
+          </div>
+          <div class="region-list" id="regionList"></div>
+          <div class="map-footnote"><span class="map-pin">●</span> <span>Little steps lead somewhere.</span></div>
+        </section>
+
+        <section class="panel journal-panel">
+          <div class="panel-kicker">TODAY'S THREAD <span class="thread-spark">✦</span></div>
+          <div class="quest-title-row"><span class="quest-icon">⌁</span><h2>Listen for the hum</h2></div>
+          <p class="quest-copy">Gather three curious things for the little field journal.</p>
+          <div class="quest-progress-row"><span id="questCount">0 / 3 finds</span><span id="questPercent">0%</span></div>
+          <div class="quest-track"><span id="questProgress"></span></div>
+          <div class="quest-reward"><span>✧</span> A small thank-you when the page is full</div>
+        </section>
+
+        <div class="tip-card">
+          <span class="tip-icon">☼</span>
+          <div><strong>Day is for discovery.</strong><p>Leave Pip a route before the fireflies come out.</p></div>
+        </div>
+      </aside>
+
+      <section class="center-column" aria-label="Adventure field">
+        <div class="scene-shell" id="sceneShell">
+          <canvas id="gameCanvas" width="960" height="600" aria-label="Top-down adventure field. Use arrow keys or WASD to move Ari, E to gather, and Space to attack."></canvas>
+          <div class="scene-top-overlay">
+            <div class="location-pill"><span class="location-icon">⌖</span><span id="sceneRegionName">Mosslight Wilds</span><span class="location-sep">·</span><span id="sceneLevel">MEADOW 01</span></div>
+            <div class="weather-badge"><span class="weather-mini">✺</span><span id="sceneWeather">WARM & BREEZY</span></div>
+          </div>
+          <div class="scene-bottom-overlay">
+            <div class="scene-caption"><span class="caption-mark">✧</span><span id="sceneCaption">Somewhere, a tiny bell is ringing.</span></div>
+            <div class="scene-minimap" aria-label="Map compass"><span>N</span><i></i><b>✦</b></div>
+          </div>
+          <div id="interactionHint" class="interaction-hint hidden"><span class="keycap">E</span><span id="interactionText">Gather</span></div>
+          <div class="scene-night-label hidden" id="nightSceneLabel"><span class="moon-dot">☾</span> NIGHT RUN IN PROGRESS</div>
+        </div>
+        <div class="scene-meta-row">
+          <div class="field-legend"><span class="legend-dot boy-dot"></span><span><b>Ari</b> &nbsp;the trailblazer</span><span class="legend-divider"></span><span class="legend-dot bot-dot"></span><span><b>Pip</b> &nbsp;the clever one</span></div>
+          <div class="scene-shortcut"><span class="keycap">WASD</span> walk <span class="tiny-separator">·</span> <span class="keycap">E</span> gather <span class="tiny-separator">·</span> <span class="keycap">SPACE</span> bonk</div>
+        </div>
+        <div class="field-action-row">
+          <div class="field-action-left">
+            <button class="field-button secondary-field-button" id="gatherButton"><span class="button-glyph gather-glyph">✦</span><span>Gather nearby</span><kbd>E</kbd></button>
+            <button class="field-button secondary-field-button" id="attackButton"><span class="button-glyph attack-glyph">✧</span><span>Little bonk</span><kbd>SPACE</kbd></button>
+          </div>
+          <button class="field-button end-day-button" id="sleepButton"><span class="endday-icon">☾</span><span><b>Head home & send Pip</b><small>Ari tucks in. Pip works the night.</small></span><span class="endday-arrow">↗</span></button>
+        </div>
+        <p class="day-reminder" id="dayReminder"><span>✦</span> Pip will follow the <b>2 stops</b> you've programmed on the right.</p>
+      </section>
+
+      <aside class="right-column" aria-label="Robot companion and route">
+        <section class="panel companion-panel">
+          <div class="companion-topline"><div class="panel-kicker">YOUR LITTLE PARTNER</div><span class="online-pill"><i></i> WITH YOU</span></div>
+          <div class="companion-profile">
+            <div class="robot-portrait" aria-hidden="true">
+              <span class="portrait-spark spark-one">✦</span><span class="portrait-spark spark-two">·</span>
+              <svg viewBox="0 0 100 100" class="robot-svg"><ellipse cx="51" cy="83" rx="27" ry="6" fill="#122a24" opacity=".2"/><path d="M50 18v-8" stroke="#cd9d56" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="8" r="4" fill="#87c87f" stroke="#3b654b" stroke-width="2"/><rect x="24" y="26" width="52" height="48" rx="14" fill="#f5e8c7" stroke="#a88a5b" stroke-width="3"/><rect x="31" y="37" width="38" height="22" rx="9" fill="#315248"/><ellipse cx="42" cy="48" rx="3" ry="4" fill="#a8f2bc"/><ellipse cx="58" cy="48" rx="3" ry="4" fill="#a8f2bc"/><path d="M43 66h14" stroke="#cf9c55" stroke-width="3" stroke-linecap="round"/><path d="M20 41h6M76 41h6" stroke="#b5a17d" stroke-width="5" stroke-linecap="round"/><path d="M35 73v7M65 73v7" stroke="#536d5f" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="31" r="2" fill="#fff8dd"/><circle cx="65" cy="31" r="2" fill="#fff8dd"/></svg>
+            </div>
+            <div class="companion-identity"><div class="name-line"><h2>Pip</h2><span class="bond-badge">♥ <b id="bondLevel">03</b></span></div><span class="companion-type">MODEL P-07 <i>·</i> GARDEN HELPER</span><p>Built from a kettle, a promise, and a very good heart.</p></div>
+          </div>
+          <div class="bot-battery-row"><span><span class="battery-icon">ϟ</span> Battery</span><b id="batteryText">96%</b></div>
+          <div class="bot-battery-track"><span id="batteryProgress"></span></div>
+          <div class="bot-footnote"><span class="bot-footnote-icon">✧</span><span id="botStatus">All charged up and ready to wander.</span></div>
+        </section>
+
+        <section class="panel route-panel">
+          <div class="route-heading-row">
+            <div><div class="panel-kicker">PROGRAM BEFORE DUSK</div><h2>Pip's night route <span class="route-count" id="routeCount">2/3</span></h2></div>
+            <span class="route-orbit" aria-hidden="true">↝</span>
+          </div>
+          <p class="route-copy">Pick up to three stops. Pip will visit them while you sleep.</p>
+          <div class="route-list" id="routeList"></div>
+          <div class="route-bottom"><span class="route-lock">⌘</span><span>Sequenced by your little engineer</span><span class="route-edit-label">EDIT ROUTE</span></div>
+        </section>
+
+        <section class="panel guardian-panel" id="guardianPanel">
+          <div class="guardian-heading"><span class="guardian-medal">♧</span><div><div class="panel-kicker">A BIG FRIEND (MAYBE)</div><h2 id="guardianName">Mossback</h2></div><span class="sleeping-label" id="guardianState">SNOOZING</span></div>
+          <p id="guardianDescription">Guardian of this little patch. Try a bonk when you're close.</p>
+          <div class="guardian-health-row"><span>FOREST GUARDIAN</span><span id="guardianHpText">♥ ♥ ♥ ♥</span></div>
+          <div class="guardian-health-track" id="guardianHealth"><span></span></div>
+          <button class="guardian-button" id="guardianButton">Find Mossback <span>↗</span></button>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="page-footer"><span>MADE OF SUNLIGHT, SOFT MOSS & SECOND CHANCES</span><span>FIELD NOTES <b>NO. 04</b> <i>✦</i> WILLOWVALE</span></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal-overlay hidden" id="nightModal" aria-modal="true" role="dialog" aria-labelledby="nightTitle">
+    <div class="night-dialog">
+      <div class="night-moon">☾<i>✦</i></div>
+      <div class="panel-kicker night-kicker">WILLOWVALE AFTER DARK · DAY <span id="nightDayNumber">04</span></div>
+      <h2 id="nightTitle">Ari is home.<br /><em>Pip is out there.</em></h2>
+      <p id="nightCopy">Your little robot is following the route you left behind.</p>
+      <div class="night-route-preview" id="nightRoutePreview"></div>
+      <div class="night-progress-label"><span id="nightStatus">Pip is warming up the night battery...</span><b id="nightPercent">0%</b></div>
+      <div class="night-progress-track"><span id="nightProgress"></span><i></i></div>
+      <div class="night-footer"><span>✧ &nbsp; The forest is in very good hands.</span><span class="night-dots"><i></i><i></i><i></i></span></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden reward-overlay" id="rewardModal" aria-modal="true" role="dialog" aria-labelledby="rewardTitle">
+    <div class="reward-dialog">
+      <button class="modal-close reward-close" id="rewardClose" aria-label="Close reward screen">×</button>
+      <div class="reward-sparkle reward-sparkle-a">✦</div><div class="reward-sparkle reward-sparkle-b">✧</div><div class="reward-sparkle reward-sparkle-c">✦</div>
+      <div class="reward-medallion"><span>✧</span><i>☼</i></div>
+      <div class="panel-kicker reward-kicker">A NIGHT WELL SPENT · DAY <span id="rewardDayNumber">04</span></div>
+      <h2 id="rewardTitle">Pip's little haul</h2>
+      <p class="reward-subtitle" id="rewardSubtitle">Look at all the lovely things your clever friend found.</p>
+      <div class="reward-route-line"><span class="route-line-icon">↝</span><span id="rewardRouteSummary">A route through 2 sweet spots</span><span class="route-line-complete">COMPLETE</span></div>
+      <div class="reward-grid" id="rewardGrid"></div>
+      <div class="reward-bonus" id="rewardBonus"><span>✹</span><b>LUCKY FIND</b><span id="bonusText">A moonlit keepsake, tucked in Pip's pocket</span><span class="bonus-glint">✦</span></div>
+      <div class="reward-actions"><span class="reward-note"><span>♡</span> Pip saved the best one for you.</span><button class="collect-button" id="collectRewards">Collect the haul <span>→</span></button></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="workshopModal" aria-modal="true" role="dialog" aria-labelledby="workshopTitle">
+    <div class="standard-dialog workshop-dialog">
+      <button class="modal-close" data-close="workshopModal" aria-label="Close workshop">×</button>
+      <div class="dialog-eyebrow"><span>⌂</span> YOUR COZY CORNER</div>
+      <h2 id="workshopTitle">Hearthhouse & workshop</h2>
+      <p class="dialog-intro">A little more room for growing, tinkering, and coming home to.</p>
+      <div class="home-summary"><div class="home-illustration"><span>⌂</span><i>✦</i><b>☼</b></div><div><span class="panel-kicker">WILLOWVALE · HOME NO. 04</span><strong id="homeLevelLabel">The little house · level 1</strong><small>Roof garden <span class="home-leaf">✿</span> Solar kettle <span class="home-sun">☼</span></small></div><span class="home-warmth">FEELS LIKE HOME</span></div>
+      <div class="upgrade-section-label"><span>MAKE IT YOURS</span><i></i><small id="upgradeResourceText">Available: 88 cogs · 12 pollen</small></div>
+      <div class="upgrade-grid" id="upgradeGrid"></div>
+      <div class="dialog-footer-note"><span>✧</span> What you build here comes with you on every adventure.</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="packModal" aria-modal="true" role="dialog" aria-labelledby="packTitle">
+    <div class="standard-dialog pack-dialog">
+      <button class="modal-close" data-close="packModal" aria-label="Close satchel">×</button>
+      <div class="dialog-eyebrow"><span>▧</span> YOUR FOUND THINGS</div>
+      <h2 id="packTitle">Ari's satchel</h2>
+      <p class="dialog-intro">A few bits and bobs, and one very special something.</p>
+      <div class="pack-capacity"><span>TRAIL SATCHEL</span><span id="packCapacityLabel">6 / 24 things</span><div><i id="packCapacityBar"></i></div></div>
+      <div class="pack-grid" id="packGrid"></div>
+      <div class="dialog-footer-note"><span>♡</span> The things that matter most don't take up any space.</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="bossModal" aria-modal="true" role="dialog" aria-labelledby="bossModalTitle">
+    <div class="standard-dialog boss-dialog">
+      <button class="modal-close" data-close="bossModal" aria-label="Close field guide">×</button>
+      <div class="dialog-eyebrow"><span>♧</span> FIELD GUIDE · GUARDIANS</div>
+      <h2 id="bossModalTitle">A friend with a big shell</h2>
+      <p class="dialog-intro">Guardians are part of the forest, not a problem to solve. A gentle bonk can earn their trust—and a very nice keepsake.</p>
+      <div class="boss-guide-card"><span class="boss-guide-icon">♧</span><div><strong id="bossGuideName">Mossback</strong><span id="bossGuideBody">A drowsy old beetle who collects the forest's forgotten sunshards.</span></div><span class="boss-guide-hearts">♥ ♥ ♥ ♥</span></div>
+      <div class="boss-guide-tip"><span>✦</span> Find them in the field, get close, then use <kbd>SPACE</kbd> for a gentle bonk.</div>
+      <button class="guide-action" id="bossGuideAction">Take me to Mossback <span>↗</span></button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
